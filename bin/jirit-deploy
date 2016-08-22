@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import sys
+import os
+
+from jirit import Jirit
+
+args = sys.argv
+try:
+    git_from = args[1]
+    git_to = args[2]
+    env = args[3]
+except IndexError:
+    print "Git commits and env required!"
+    sys.exit()
+
+
+if __name__ == '__main__':
+    jira = {
+        'jira_username': os.environ['JIRA_EMAIL'],
+        'jira_passwd': os.environ['JIRA_PASSWORD'],
+        'jira_url': os.environ['JIRA_URL'],
+        'jira_id': os.environ['JIRA_ID'],
+    }
+
+    git = {
+        'git_username': os.environ['GIT_USERNAME'],
+        'git_passwd': os.environ['GIT_PASSWORD'],
+        'git_org': os.environ['GIT_ORG'],
+        'git_repo': os.environ['GIT_REPO']
+    }
+
+    jirit = Jirit(jira, git)
+    jirit.transition_issues(git_from, git_to, 'deploy to {}'.format(env))
