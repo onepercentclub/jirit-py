@@ -22,21 +22,35 @@ class Jirit():
             print "GIT settings required!"
             raise e
 
-    def tickets(self, git_from, git_to):
+    def issues(self, git_from, git_to, match_tag):
         c = self.repo.compare(git_from, git_to)
+        issues_ids = []
 
-        tickets_ids = []
+        def append(id):
+            issues_ids.append(id)
+
         for commit in c.commits:
-            m = re.search(r'(' + self.jira_id + '-\d+)', commit.commit.message)
+            message = commit.commit.message
+            m = re.search(r'(' + self.jira_id + '-\d+)', message)
             if m:
-                tickets_ids.append(m.group(0))
+                if match_tag:
+                    tags = re.findall(r'(\B#\w*[a-zA-Z]+\w*)', message)
+                    if "#{}".format(match_tag) in tags:
+                        append(m.group(0))
+                else:
+                    append(m.group(0))
 
-        tickets = []
-        for tid in tickets_ids:
-            tickets.append(self.jira.issue(tid, fields='summary,comment'))
-        return tickets
+        issues = []
+        for tid in issues_ids:
+            issues.append(self.jira.issue(tid, fields='summary,comment'))
+        return issues
+
+    def transition_issues(self, git_from, git_to, transition, match_tag):
+        for issue in self.issues(git_from, git_to, match_tag):
+            self.jira.transition_issue(issue, transition)
+            print "Resolved: {}".format(issue.fields.summary)
 
     def summary(self, git_from, git_to):
-        tickets = self.tickets(git_from, git_to)
-        for ticket in tickets:
-            print "{}: {}".format(ticket.key, ticket.fields.summary)
+        issues = self.issues(git_from, git_to)
+        for issue in issues:
+            print "{}: {}".format(issue.key, issue.fields.summary)
