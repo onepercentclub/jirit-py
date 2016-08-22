@@ -41,7 +41,7 @@ class Jirit():
                     append(m.group(0))
 
         issues = []
-        for tid in issues_ids:
+        for tid in set(sorted(issues_ids)):
             issues.append(self.jira.issue(tid, fields='summary,comment'))
         return issues
 
