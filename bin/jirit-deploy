@@ -9,7 +9,8 @@ args = sys.argv
 try:
     git_from = args[1]
     git_to = args[2]
-    env = args[3]
+    transition = args[3]
+    match_tag = args[4]
 except IndexError:
     print "Git commits and env required!"
     sys.exit()
@@ -31,4 +32,4 @@ if __name__ == '__main__':
     }
 
     jirit = Jirit(jira, git)
-    jirit.transition_issues(git_from, git_to, 'deploy to {}'.format(env))
+    jirit.transition_issues(git_from, git_to, transition=transition, match_tag=match_tag)
