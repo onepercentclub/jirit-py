@@ -22,7 +22,7 @@ class Jirit():
             print "GIT settings required!"
             raise e
 
-    def issues(self, git_from, git_to, match_tag):
+    def issues(self, git_from, git_to, match_tag=None):
         c = self.repo.compare(git_from, git_to)
         issues_ids = []
 
@@ -50,7 +50,8 @@ class Jirit():
             self.jira.transition_issue(issue, transition)
             print "Resolved: {}".format(issue.fields.summary)
 
-    def summary(self, git_from, git_to):
+    def summary(self, git_from, git_to, format='html'):
         issues = self.issues(git_from, git_to)
+        str = "<p>{}: {}</p>" if format == 'html' else "{}: {}"
         for issue in issues:
-            print "{}: {}".format(issue.key, issue.fields.summary)
+            print str.format(issue.key, issue.fields.summary)
