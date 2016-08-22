@@ -33,8 +33,10 @@ setup(
     install_requires=install_requires,
     provides=[NAME],
 
-    scripts=['bin/jirit-show'],
-
+    scripts=[
+        'bin/jirit-show',
+        'bin/jirit-deploy'
+    ],
 
     # You can install these using the following syntax, for example:
     # $ pip install -e .[test]
