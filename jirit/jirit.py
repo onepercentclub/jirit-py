@@ -1,6 +1,7 @@
 import re
 
 from jira import JIRA
+from jira.exceptions import JIRAError
 from github import Github
 
 
@@ -42,16 +43,50 @@ class Jirit():
 
         issues = []
         for tid in set(sorted(issues_ids)):
-            issues.append(self.jira.issue(tid, fields='summary,comment'))
+            try:
+                issues.append(self.jira.issue(tid, fields='summary,comment'))
+            except JIRAError:
+                pass
         return issues
 
-    def transition_issues(self, git_from, git_to, transition, match_tag):
+    def transition_issues(self, git_from, git_to, transition, match_tag, dry_run=True,
+                          format='html', comment=None):
+        success = []
+        failure = []
         for issue in self.issues(git_from, git_to, match_tag):
-            self.jira.transition_issue(issue, transition)
-            print "Resolved: {}".format(issue.fields.summary)
+            message = {
+                'key': issue.key,
+                'message': issue.fields.summary.replace('\'', '"')
+            }
+
+            try:
+                if not dry_run:
+                    self.jira.transition_issue(issue, transition, comment=comment)
+                success.append(message)
+            except JIRAError:
+                failure.append(message)
+
+        success_count = len(success)
+        failure_count = len(failure)
+
+        if success_count or failure_count:
+            str_temp = '<p>{}{}{}</p>' if format == 'html' else '{}{} {}\n'
+            if success_count:
+                print str_temp.format(success_count, ' issues(s) transitioned:', '')
+                for s in success:
+                    print str_temp.format(s['key'], ': ', s['message'])
+
+            if failure_count:
+                print str_temp.format(failure_count, ' issues(s) failed transition:', '')
+                for f in failure:
+                    print str_temp.format(f['key'], ': ', f['message'])
+
+        else:
+            print 'No tickets to transition'
 
     def summary(self, git_from, git_to, format='html'):
         issues = self.issues(git_from, git_to)
-        str = "<p>{}: {}</p>" if format == 'html' else "{}: {}"
+
+        str_temp = '<p>{}: {}</p>' if format == 'html' else '{}: {}'
         for issue in issues:
-            print str.format(issue.key, issue.fields.summary)
+            print str_temp.format(issue.key, issue.fields.summary.replace('\'', '"'))
