@@ -12,7 +12,7 @@ try:
     git_to = args[2]
     transition = args[3]
     match_tag = args[4]
-    dry_run = False if args[5] == "False" or "false" else True
+    dry_run = False if args[5] in ["False", "false", "no"] else True
 except IndexError:
     print "Git commits and env required!"
     sys.exit()
