@@ -52,7 +52,7 @@ setup(
     author='1%Club',
     author_email='devteam@onepercentclub.com',
     platforms=['any'],
-    url='https://github.com/onepercentclub/jirit',
+    url='https://github.com/onepercentclub/jirit-py',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
