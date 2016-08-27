@@ -69,8 +69,8 @@ class Jirit():
         success_count = len(success)
         failure_count = len(failure)
 
+        str_temp = '<p>{}{}{}</p>' if format == 'html' else '{}{}{}'
         if success_count or failure_count:
-            str_temp = '<p>{}{}{}</p>' if format == 'html' else '{}{} {}\n'
             if success_count:
                 print str_temp.format(success_count, ' issues(s) transitioned:', '')
                 for s in success:
@@ -82,7 +82,7 @@ class Jirit():
                     print str_temp.format(f['key'], ': ', f['message'])
 
         else:
-            print 'No tickets to transition'
+            print str_temp.format('No tickets to transition', '', '')
 
     def summary(self, git_from, git_to, format='html'):
         issues = self.issues(git_from, git_to)
