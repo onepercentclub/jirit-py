@@ -25,7 +25,7 @@ tests_requires = [
 
 setup(
     name=NAME,
-    version='1.3.2',
+    version='1.3.3',
     license='BSD',
 
     # Packaging.
@@ -33,10 +33,11 @@ setup(
     install_requires=install_requires,
     provides=[NAME],
 
-    scripts=[
-        'bin/jirit-show',
-        'bin/jirit-deploy'
-    ],
+    entry_points={
+        'console_scripts': [
+            'jirit = jirit.jirit_shell:main',
+        ]
+    },
 
     # You can install these using the following syntax, for example:
     # $ pip install -e .[test]
