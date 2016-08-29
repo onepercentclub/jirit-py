@@ -5,12 +5,13 @@ from setuptools import setup, find_packages
 
 
 NAME = 'jirit'
+PROJECT_ROOT, _ = os.path.split(__file__)
 
 
 def read_file(name):
-    return open(os.path.join(os.path.dirname(__file__), name)).read()
+    return open(os.path.join(PROJECT_ROOT, name)).read()
 
-readme = read_file('README.md')
+readme = read_file('README.rst')
 changes = ''
 
 install_requires = [
@@ -25,7 +26,7 @@ tests_requires = [
 
 setup(
     name=NAME,
-    version='1.3.3',
+    version='1.3.4',
     license='BSD',
 
     # Packaging.
