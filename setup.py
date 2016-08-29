@@ -25,7 +25,7 @@ tests_requires = [
 
 setup(
     name=NAME,
-    version='1.3.1',
+    version='1.3.2',
     license='BSD',
 
     # Packaging.
