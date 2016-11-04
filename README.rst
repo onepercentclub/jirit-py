@@ -28,3 +28,10 @@ Transition Jira tickets based on git change
 jirit deploy <commit_hash_from> <commit_hash_to> <transition name> <match tag> <dry run>
 
 This will trigger the <transition name> for Jira ticket if there is a git commit referenced in the git commit range, and the commit includes the tag #<match tag>. If the <dry run> flag is true then it will only display the possible transitioned issues without doing the Jira transition.
+
+Building release
+----------------
+
+pip install twine
+python setup.py sdist bdist_wheel
+twine upload -s dist/jirit-1.3.5*
