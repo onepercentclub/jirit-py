@@ -74,12 +74,12 @@ class Jirit():
             if success_count:
                 print str_temp.format(success_count, ' issues(s) transitioned:', '')
                 for s in success:
-                    print str_temp.format(s['key'], ': ', s['message'])
+                    print str_temp.format(s['key'], ': ', s['message'].encode('utf-8'))
 
             if failure_count:
                 print str_temp.format(failure_count, ' issues(s) failed transition:', '')
                 for f in failure:
-                    print str_temp.format(f['key'], ': ', f['message'])
+                    print str_temp.format(f['key'], ': ', f['message'].encode('utf-8'))
 
         else:
             print str_temp.format('No tickets to transition', '', '')
